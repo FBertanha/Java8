@@ -1,5 +1,6 @@
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * Created by felipe on 23/04/17.
@@ -11,35 +12,66 @@ public class OrdenaString {
         palavras.add("editora casa do codigo");
         palavras.add("caelum");
 
-        //Collections.sort(palavras,  new ComparadorPorTamanho());
-        palavras.sort(new ComparadorPorTamanho());
         System.out.println(palavras);
 
-//        for (String p : palavras) {
-//            System.out.println(p);
-//        }
+        //Sem lambda
+        palavras.sort(new Comparator<String>() {
+            @Override
+            public int compare(String s1, String s2) {
+                return s1.length() - s2.length();
+            }
+        });
 
-        Consumer<String> consumidor = new ImprimeNaLinha();
-        palavras.forEach(consumidor);
+        //Com lambda
+        palavras.sort((s1, s2) -> {
+            return s1.length() - s2.length();
+        });
+
+        //Com lambda 2
+        palavras.sort((s1, s2) -> Integer.compare(s1.length(), s2.length()));
+
+
+        //Foreach Sem lambda
+        palavras.forEach(new Consumer<String>() {
+            @Override
+            public void accept(String s) {
+                System.out.println(s);
+            }
+        });
+
+        //Foreach com lambda
+        palavras.forEach(s -> System.out.println(s));
+
+        //Criando um consumer com lambda
+        Consumer<String> consumer = s -> System.out.println(s);
+        palavras.forEach(consumer);
+
+        /*
+         * Aula 03
+         */
+
+        //Lambda com Comparator
+        palavras.sort(Comparator.comparing(s -> s.length()));
+
+        //Method reference
+        palavras.sort(Comparator.comparing(String::length));
+
+        //Method reference detalhado
+        Function<String, Integer> funcao = String::length;
+        Comparator<String> comparador = Comparator.comparing(funcao);
+        palavras.sort(comparador);
+
+        //Exercicios
+        palavras.sort(Comparator.comparing(s -> s.charAt(0)));
+        System.out.println(palavras);
+
+        palavras.forEach(System.out::println);
+
+
+
+
+
     }
 }
 
-class ImprimeNaLinha implements Consumer<String> {
 
-    @Override
-    public void accept(String s) {
-        System.out.println(s);
-    }
-}
-
-class ComparadorPorTamanho implements Comparator<String> {
-
-    @Override
-    public int compare(String s1, String s2) {
-        if (s1.length() < s2.length())
-            return -1;
-        if (s1.length() > s2.length())
-            return 1;
-        return 0;
-    }
-}

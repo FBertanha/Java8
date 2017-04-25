@@ -1,8 +1,10 @@
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.OptionalDouble;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -20,6 +22,20 @@ public class ExemploCursos {
         cursos.sort(Comparator.comparingInt(c -> c.getAlunos()));
 
         //cursos.forEach(c -> System.out.println(c.getNome()));
+
+        //com lambda
+        int sum = cursos.stream()
+                .filter(curso -> curso.getAlunos() >= 100)
+                .mapToInt(curso -> curso.getAlunos())
+                .sum();
+        System.out.println(sum);
+
+        //com method reference
+        sum = cursos.stream()
+                .filter(curso -> curso.getAlunos() >= 100)
+                .mapToInt(Curso::getAlunos)
+                .sum();
+        System.out.println(sum);
 
         /*filtrando cursos com mais de 50 alunos
          */
@@ -75,6 +91,48 @@ public class ExemploCursos {
                 .map(Curso::getAlunos)
                 .forEach(System.out::println);
 
+        /*
+        Aula 05
+         */
+        //retornando o primeiro elemento do Stream
+        cursos.stream()
+                .filter(curso -> curso.getAlunos() > 50)
+                .findFirst();
+
+        //calculando média de quantidade de alunos
+
+        //com lambda
+        OptionalDouble mediaAlunos = cursos.stream()
+                .mapToDouble(curso -> curso.getAlunos())
+                .average();
+
+        mediaAlunos.ifPresent(media -> System.out.println(media));
+
+        //com method reference
+        cursos.stream()
+                .mapToDouble(Curso::getAlunos)
+                .average()
+                .ifPresent(System.out::println);
+
+        //coletando o resultado do stream em uma List
+        //com lambda
+        Stream<Curso> stream = cursos.stream()
+                .filter(curso -> curso.getAlunos() > 50);
+        List<Curso> listaDoStream = stream.collect(Collectors.toList());
+        listaDoStream.forEach(s -> System.out.println(s));
+
+        //com method reference
+        stream = cursos.stream()
+                .filter(curso -> curso.getAlunos() > 50);
+        listaDoStream = stream.collect(Collectors.toList());
+
+
+        //atribuindo à cursos
+        cursos = cursos.stream()
+                .filter(curso -> curso.getAlunos() > 50)
+                .collect(Collectors.toList());
+
+        cursos.forEach(System.out::println);
 
     }
 

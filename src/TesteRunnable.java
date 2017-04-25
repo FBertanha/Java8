@@ -13,9 +13,7 @@ public class TesteRunnable {
 
         //Com lambda
 
-        new Thread( () -> System.out.println("Executando um runnable")).start();
-
-
+        new Thread(() -> System.out.println("Executando um runnable")).start();
 
 
     }
